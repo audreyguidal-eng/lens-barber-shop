@@ -134,13 +134,24 @@ model Vacation {
 /// Notifications du dashboard barbier
 model Notification {
   id        String   @id @default(cuid())
-  type      String // NEW_BOOKING | CANCELLED | MODIFIED
+  type      String // NEW_CLIENT | NEW_BOOKING | CANCELLED | MODIFIED
   title     String
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
   @@index([read])
+}
+
+/// Abonnement Web Push d'un appareil du barbier (téléphone, ordinateur).
+/// Permet d'envoyer une vraie notification système à chaque nouveau RDV.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String   @default("")
+  createdAt DateTime @default(now())
 }
 
 /// Réglages généraux du salon (clé/valeur JSON)

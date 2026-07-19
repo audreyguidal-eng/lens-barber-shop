@@ -119,6 +119,7 @@ export const previewPrisma: any = {
   blockedSlot: model([]),
   vacation: model([]),
   user: model([]),
+  pushSubscription: model([]),
   $transaction: async (fn: any) => (typeof fn === "function" ? fn(previewPrisma) : Promise.all(fn)),
   $disconnect: async () => {},
 };

@@ -59,7 +59,9 @@ export default function PrestationsPage() {
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl text-white md:text-3xl">Prestations</h1>
-          <p className="text-sm text-slate-400">Gérez vos services, tarifs et durées.</p>
+          <p className="text-sm text-slate-400">
+            Gérez vos services, tarifs et durées.
+          </p>
         </div>
         <button
           onClick={() => setCreating(true)}
@@ -68,6 +70,18 @@ export default function PrestationsPage() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
           Ajouter
         </button>
+      </div>
+
+      {/* Aide : comment masquer / réafficher une prestation */}
+      <div className="mb-5 flex items-start gap-2.5 rounded-2xl border border-white/5 bg-white/[0.02] px-4 py-3 text-[13px] text-slate-400">
+        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald/15 text-emerald">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+        </span>
+        <span>
+          Utilisez l&apos;interrupteur <span className="font-semibold text-white">Visible</span> pour
+          masquer une prestation du site sans la supprimer. Réactivez-la à tout
+          moment : rien n&apos;est perdu.
+        </span>
       </div>
 
       <div className="space-y-6">
@@ -80,7 +94,7 @@ export default function PrestationsPage() {
               {c.items.map((s) => (
                 <div
                   key={s.id}
-                  className="flex flex-wrap items-center gap-3 border-b border-white/5 px-4 py-3 last:border-0 md:flex-nowrap"
+                  className={`flex flex-wrap items-center gap-3 border-b border-white/5 px-4 py-3 last:border-0 md:flex-nowrap ${s.active ? "" : "opacity-55"}`}
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -90,23 +104,33 @@ export default function PrestationsPage() {
                           POP
                         </span>
                       )}
+                      {!s.active && (
+                        <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                          Masquée
+                        </span>
+                      )}
                     </div>
                     <div className="truncate text-xs text-slate-500">{s.description}</div>
                   </div>
                   <div className="font-mono text-sm font-bold text-gold">{formatPrice(s.priceCents)}</div>
                   <div className="w-16 text-right text-xs text-slate-400">{formatDuration(s.durationMin)}</div>
+
+                  {/* Interrupteur Visible / Masquée */}
                   <button
                     onClick={() => toggle(s)}
-                    className={`relative h-6 w-11 rounded-full transition ${s.active ? "bg-emerald" : "bg-white/10"}`}
-                    title={s.active ? "Activée" : "Désactivée"}
+                    className="flex items-center gap-2"
+                    title={s.active ? "Visible sur le site — cliquez pour masquer" : "Masquée — cliquez pour réafficher"}
                   >
-                    <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${s.active ? "left-[22px]" : "left-0.5"}`} />
+                    <span className={`hidden text-[11px] font-semibold sm:block ${s.active ? "text-emerald" : "text-slate-500"}`}>
+                      {s.active ? "Visible" : "Masquée"}
+                    </span>
+                    <span className={`relative h-6 w-11 shrink-0 rounded-full transition ${s.active ? "bg-emerald" : "bg-white/15"}`}>
+                      <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${s.active ? "left-[22px]" : "left-0.5"}`} />
+                    </span>
                   </button>
-                  <button onClick={() => setEditing(s)} className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-white/5 hover:text-white">
+
+                  <button onClick={() => setEditing(s)} className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-white/5 hover:text-white" title="Modifier">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
-                  </button>
-                  <button onClick={() => remove(s.id)} className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-red-400/10 hover:text-red-300">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13" /></svg>
                   </button>
                 </div>
               ))}
@@ -128,6 +152,10 @@ export default function PrestationsPage() {
             setCreating(false);
             load();
           }}
+          onDelete={async (id) => {
+            await remove(id);
+            setEditing(null);
+          }}
         />
       )}
     </div>
@@ -139,11 +167,13 @@ function ServiceModal({
   categories,
   onClose,
   onSaved,
+  onDelete,
 }: {
   service: Service | null;
   categories: Category[];
   onClose: () => void;
   onSaved: () => void;
+  onDelete: (id: string) => void;
 }) {
   const [name, setName] = useState(service?.name ?? "");
   const [categoryId, setCategoryId] = useState(service?.categoryId ?? categories[0]?.id ?? "");
@@ -221,6 +251,23 @@ function ServiceModal({
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>
         </div>
+
+        {service && (
+          <div className="mt-4 border-t border-white/5 pt-3 text-center">
+            <p className="mb-2 text-[11px] text-slate-500">
+              Pour la retirer du site sans la perdre, préférez l&apos;interrupteur
+              « Visible ». La suppression est définitive.
+            </p>
+            <button
+              onClick={() => {
+                if (confirm(`Supprimer définitivement « ${service.name} » ?`)) onDelete(service.id);
+              }}
+              className="text-xs font-semibold text-red-400/80 hover:text-red-300"
+            >
+              Supprimer définitivement
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@/components/ui/Icon";
 import { formatPrice, formatTime, formatDuration } from "@/lib/utils";
+import { PushToggle } from "@/components/admin/PushToggle";
 
 type Stats = {
   todayCount: number;
@@ -47,6 +48,11 @@ export default function AdminDashboard() {
       <div className="mb-6">
         <h1 className="font-display text-2xl text-white md:text-3xl">Tableau de bord</h1>
         <p className="text-sm text-slate-400">Aperçu de votre activité en temps réel.</p>
+      </div>
+
+      {/* Activation des notifications push (une fois par appareil) */}
+      <div className="mb-6">
+        <PushToggle />
       </div>
 
       {/* KPIs — l'essentiel, simplifié */}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAvailableSlots } from "@/lib/availability";
 import { toDateKey } from "@/lib/utils";
+import { sendPushToAll } from "@/lib/push";
 
 export const dynamic = "force-dynamic";
 
@@ -134,12 +135,29 @@ export async function POST(req: Request) {
         });
       }
 
-      return created;
+      return { created, isNewClient, clientName: client.name };
+    });
+
+    // Notification push (vraie notification système) sur le téléphone du barbier.
+    const when = startDate.toLocaleString("fr-FR", {
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+    await sendPushToAll({
+      title: appointment.isNewClient
+        ? "🎉 Nouveau client !"
+        : "Nouvelle réservation",
+      body: `${appointment.clientName} — ${service.name}, ${when}`,
+      url: "/admin/calendrier",
+      tag: `rdv-${appointment.created.id}`,
     });
 
     // TODO (prévu) : envoi email + SMS de confirmation ici.
 
-    return NextResponse.json({ ok: true, appointment }, { status: 201 });
+    return NextResponse.json(
+      { ok: true, appointment: appointment.created },
+      { status: 201 },
+    );
   } catch (e: any) {
     if (e?.message === "SLOT_TAKEN") {
       return NextResponse.json(
