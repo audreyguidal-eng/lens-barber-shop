@@ -13,7 +13,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/reserver" },
 };
 
-export default async function ReserverPage() {
+export default async function ReserverPage({
+  searchParams,
+}: {
+  searchParams: { service?: string };
+}) {
   const categoriesRaw = await prisma.category.findMany({
     orderBy: { order: "asc" },
     include: { services: { where: { active: true }, orderBy: { order: "asc" } } },
@@ -61,7 +65,7 @@ export default async function ReserverPage() {
           </p>
         </div>
 
-        <BookingWizard categories={categories} />
+        <BookingWizard categories={categories} preselectServiceId={searchParams.service} />
       </div>
     </main>
   );

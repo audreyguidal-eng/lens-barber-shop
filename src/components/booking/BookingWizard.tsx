@@ -18,10 +18,19 @@ type Slot = { time: string; start: string; available: boolean };
 
 const STEPS = ["Prestation", "Coiffeur", "Date", "Heure", "Coordonnées", "Confirmation"];
 
-export function BookingWizard({ categories }: { categories: CategoryDTO[] }) {
+export function BookingWizard({
+  categories,
+  preselectServiceId,
+}: {
+  categories: CategoryDTO[];
+  preselectServiceId?: string;
+}) {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [service, setService] = useState<ServiceDTO | null>(null);
+  const preselected = preselectServiceId
+    ? categories.flatMap((c) => c.services).find((s) => s.id === preselectServiceId) ?? null
+    : null;
+  const [step, setStep] = useState(preselected ? 1 : 0);
+  const [service, setService] = useState<ServiceDTO | null>(preselected);
   const [date, setDate] = useState<Date | null>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
   const [slots, setSlots] = useState<Slot[]>([]);

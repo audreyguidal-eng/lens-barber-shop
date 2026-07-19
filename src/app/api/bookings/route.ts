@@ -78,6 +78,10 @@ export async function POST(req: Request) {
 
       // Client : dédupliqué par téléphone
       const normalizedPhone = String(phone).replace(/\s+/g, "");
+      const existing = await tx.client.findUnique({
+        where: { phone: normalizedPhone },
+      });
+      const isNewClient = !existing;
       const client = await tx.client.upsert({
         where: { phone: normalizedPhone },
         update: {
@@ -104,16 +108,31 @@ export async function POST(req: Request) {
         include: { service: true, client: true },
       });
 
-      await tx.notification.create({
-        data: {
-          type: "NEW_BOOKING",
-          title: "Nouvelle réservation",
-          message: `${client.name} — ${service.name} le ${startDate.toLocaleString(
-            "fr-FR",
-            { dateStyle: "long", timeStyle: "short" },
-          )}`,
-        },
-      });
+      // Notification : nouveau client (première réservation) en priorité,
+      // sinon notification de nouvelle réservation.
+      if (isNewClient) {
+        await tx.notification.create({
+          data: {
+            type: "NEW_CLIENT",
+            title: "🎉 Nouveau client !",
+            message: `${client.name} vient de réserver pour la première fois — ${service.name} le ${startDate.toLocaleString(
+              "fr-FR",
+              { dateStyle: "long", timeStyle: "short" },
+            )}`,
+          },
+        });
+      } else {
+        await tx.notification.create({
+          data: {
+            type: "NEW_BOOKING",
+            title: "Nouvelle réservation",
+            message: `${client.name} — ${service.name} le ${startDate.toLocaleString(
+              "fr-FR",
+              { dateStyle: "long", timeStyle: "short" },
+            )}`,
+          },
+        });
+      }
 
       return created;
     });

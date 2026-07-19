@@ -75,6 +75,31 @@ export function Contact() {
             </Reveal>
 
             <Reveal delay={0.2}>
+              {/* Le salon en pratique */}
+              <div className="mt-4 rounded-2xl border border-anthracite/10 bg-white p-5">
+                <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-anthracite/45">
+                  Le salon en pratique
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { icon: "parking", label: "Parking" },
+                    { icon: "card", label: "Carte bancaire" },
+                    { icon: "wheelchair", label: "Accès PMR" },
+                    { icon: "child", label: "Enfants" },
+                    { icon: "afro", label: "Afro & texturés" },
+                    { icon: "woman", label: "Femmes" },
+                  ].map((a) => (
+                    <span
+                      key={a.label}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-anthracite/10 bg-canvas px-3 py-1.5 text-xs font-medium text-anthracite/70"
+                    >
+                      <Icon name={a.icon} size={14} className="text-emerald" />
+                      {a.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-6">
                 <RippleButton href="/reserver" variant="gold" className="px-8 py-4">
                   Réserver un créneau

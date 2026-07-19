@@ -49,11 +49,10 @@ export default function AdminDashboard() {
         <p className="text-sm text-slate-400">Aperçu de votre activité en temps réel.</p>
       </div>
 
-      {/* KPIs */}
+      {/* KPIs — l'essentiel, simplifié */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi loading={loading} label="RDV aujourd'hui" value={stats?.todayCount ?? 0} icon="clock" accent="gold" />
         <Kpi loading={loading} label="RDV cette semaine" value={stats?.weekCount ?? 0} icon="sparkles" accent="emerald" />
-        <Kpi loading={loading} label="RDV ce mois" value={stats?.monthCount ?? 0} icon="scissors" accent="navy" />
         <Kpi
           loading={loading}
           label="CA estimé (mois)"
@@ -62,20 +61,7 @@ export default function AdminDashboard() {
           accent="gold"
           isText
         />
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Kpi loading={loading} label="Nouveaux clients" value={stats?.newClientsMonth ?? 0} icon="woman" accent="emerald" />
-        <Kpi loading={loading} label="Clients fidèles" value={stats?.loyalClientsMonth ?? 0} icon="check" accent="navy" />
-        <Kpi
-          loading={loading}
-          label="Durée moyenne"
-          value={stats ? formatDuration(stats.avgDurationMin) : "—"}
-          icon="clock"
-          accent="gold"
-          isText
-        />
-        <FillRate loading={loading} rate={stats?.fillRate ?? 0} />
+        <Kpi loading={loading} label="Nouveaux clients (mois)" value={stats?.newClientsMonth ?? 0} icon="woman" accent="emerald" />
       </div>
 
       {/* RDV du jour */}

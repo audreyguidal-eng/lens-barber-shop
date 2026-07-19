@@ -112,7 +112,10 @@ export const previewPrisma: any = {
   settings: model([settings]),
   appointment: model([]),
   client: model([]),
-  notification: model([]),
+  notification: model([
+    { id: "n1", type: "NEW_CLIENT", title: "🎉 Nouveau client !", message: "Alexis D. vient de réserver pour la première fois — Coupe + Barbe classique.", read: false, createdAt: new Date(0) },
+    { id: "n2", type: "NEW_BOOKING", title: "Nouvelle réservation", message: "Maxime B. — Coupe Homme aujourd'hui à 15h30.", read: false, createdAt: new Date(0) },
+  ]),
   blockedSlot: model([]),
   vacation: model([]),
   user: model([]),

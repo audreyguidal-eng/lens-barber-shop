@@ -4,17 +4,14 @@ import { Hero } from "@/components/sections/Hero";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { Services, type CategoryDTO } from "@/components/sections/Services";
 import { WhyUs } from "@/components/sections/WhyUs";
-import { Gallery } from "@/components/sections/Gallery";
-import { Salon } from "@/components/sections/Salon";
 import { Reviews, type ReviewDTO } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
-import { IMAGES } from "@/lib/images";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [categoriesRaw, reviewsRaw, galleryRaw] = await Promise.all([
+  const [categoriesRaw, reviewsRaw] = await Promise.all([
     prisma.category.findMany({
       orderBy: { order: "asc" },
       include: {
@@ -22,7 +19,6 @@ export default async function HomePage() {
       },
     }),
     prisma.review.findMany({ orderBy: { order: "asc" } }),
-    prisma.gallery.findMany({ orderBy: { order: "asc" } }),
   ]);
 
   const categories: CategoryDTO[] = categoriesRaw
@@ -49,11 +45,6 @@ export default async function HomePage() {
     source: r.source,
   }));
 
-  const images =
-    galleryRaw.length > 0
-      ? galleryRaw.map((g, i) => ({ src: g.url, alt: g.alt, tall: i % 3 === 1 }))
-      : IMAGES.gallery;
-
   return (
     <>
       <Header />
@@ -62,8 +53,6 @@ export default async function HomePage() {
         <TrustBar />
         <Services categories={categories} />
         <WhyUs />
-        <Salon />
-        <Gallery images={images} />
         <Reviews reviews={reviews} />
         <Contact />
       </main>

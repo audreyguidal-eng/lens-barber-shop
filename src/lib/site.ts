@@ -35,8 +35,6 @@ export const SITE = {
 export const NAV = [
   { label: "Accueil", href: "/#accueil" },
   { label: "Prestations", href: "/#prestations" },
-  { label: "Le salon", href: "/#le-salon" },
-  { label: "Galerie", href: "/#galerie" },
   { label: "Avis", href: "/#avis" },
   { label: "Contact", href: "/#contact" },
 ];
