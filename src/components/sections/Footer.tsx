@@ -116,23 +116,28 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Accès Barber — ligne dédiée, discrète, tout en bas */}
+        <div className="mb-6 flex justify-center border-t border-white/10 pt-8">
+          <Link
+            href="/admin"
+            className="group inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.03] px-5 py-2.5 text-sm text-canvas/60 transition-all hover:border-gold/40 hover:text-gold"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+            <span className="font-medium">Accès Barber</span>
+            <span className="rounded-full bg-emerald/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald">
+              Accès libre
+            </span>
+            <svg className="transition-transform group-hover:translate-x-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </Link>
+        </div>
+
         {/* Bas de page */}
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-canvas/45 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-6 text-xs text-canvas/45 md:flex-row">
           <p>
             © {new Date().getFullYear()} Len&apos;s Barber Shop · RCS {SITE.rcs} ·
             Mentions légales
           </p>
-          <div className="flex items-center gap-4">
-            <span>Saintry-sur-Seine · 91250</span>
-            {/* Lien discret vers l'espace barbier — tout en bas */}
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 text-canvas/30 transition-colors hover:text-gold"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-              Espace Barber
-            </Link>
-          </div>
+          <span>Saintry-sur-Seine · 91250</span>
         </div>
       </div>
     </footer>

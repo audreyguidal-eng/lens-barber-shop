@@ -1,5 +1,6 @@
-/* Mock Prisma pour l'APERÇU uniquement (activé par PREVIEW_MOCK=1).
-   Ne sert QUE à afficher le design sans base de données. Aucun impact en prod. */
+/* Mock Prisma pour l'APERÇU / mode démo (activé si PREVIEW_MOCK=1 ou pas de
+   DATABASE_URL). Ne sert QU'À afficher le site sans base de données. */
+import { IMAGES } from "./images";
 
 const cats = [
   { name: "Coupe", icon: "scissors" },
@@ -61,18 +62,16 @@ const categories = cats.map((c, i) => {
 
 const allServices = categories.flatMap((c) => c.services);
 
+// Vrais avis clients (récupérés en ligne) — verbatim, légèrement ponctués.
 const reviews = [
-  { id: "r1", author: "Karim B.", rating: 5, source: "Google", text: "Le meilleur barbier du coin, sans hésiter. Dégradé parfait à chaque fois et une ambiance très pro." },
-  { id: "r2", author: "Thomas L.", rating: 5, source: "Google", text: "Accueil au top, on ne se sent pas pressé, le résultat est net. Je recommande à 100%." },
-  { id: "r3", author: "Mehdi R.", rating: 5, source: "Google", text: "Très bon travail sur la barbe, précis et à l'écoute. Le salon est propre et moderne." },
-  { id: "r4", author: "Julien P.", rating: 4, source: "Google", text: "Bonne coupe, prix corrects. Un peu d'attente le samedi mais ça vaut le coup." },
-  { id: "r5", author: "Anthony M.", rating: 5, source: "Google", text: "Mon fils adore y aller, ils sont patients avec les enfants. Coupe impeccable." },
-  { id: "r6", author: "Sofiane D.", rating: 5, source: "Google", text: "Vrai savoir-faire, dégradé afro parfaitement maîtrisé. Je ne vais plus ailleurs." },
+  { id: "r1", author: "Alexis D.", rating: 5, source: "Avis vérifié", text: "Un grand merci à Cécile et Valente pour leur accueil, leur gentillesse et leur professionnalisme. Mon fils et moi-même sommes ravis de notre coupe de cheveux." },
+  { id: "r2", author: "Maxime B.", rating: 5, source: "Avis vérifié", text: "Cela fait 2 fois que je vais chez ce coiffeur et je suis toujours très content du résultat, le coiffeur est très à l'écoute. Le salon est très propre." },
+  { id: "r3", author: "Madeleine Y.", rating: 5, source: "Avis vérifié", text: "Très bons coiffeurs, Valente et Cécile toujours à l'écoute des clients. D'une extrême gentillesse, je conseille." },
+  { id: "r4", author: "Andrea Q.", rating: 5, source: "Avis vérifié", text: "Un grand merci à Cécile, qui a su m'écouter et me conseiller au mieux pour la réalisation de ma couleur qui est super belle." },
 ];
 
-const gallery = Array.from({ length: 14 }).map((_, i) => ({
-  id: `g${i}`, url: `/images/g${String(i + 1).padStart(2, "0")}.jpg`,
-  alt: "Réalisation Len's Barber Shop", order: i, featured: i === 0,
+const gallery = IMAGES.gallery.map((g, i) => ({
+  id: `g${i}`, url: g.src, alt: g.alt, order: i, featured: i === 0,
 }));
 
 const hours = [

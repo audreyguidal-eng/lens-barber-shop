@@ -81,16 +81,12 @@ const hours = [
   { weekday: 0, isOpen: false, open: 0, close: 0 }, // Dimanche fermé
 ];
 
-// ------- Avis (Google) -------
+// ------- Avis clients (vrais avis récupérés en ligne) -------
 const reviews = [
-  { author: "Karim B.", rating: 5, text: "Le meilleur barbier du coin, sans hésiter. Dégradé parfait à chaque fois et une ambiance très pro.", source: "Google" },
-  { author: "Thomas L.", rating: 5, text: "Accueil au top, on ne se sent pas pressé, le résultat est net. Je recommande à 100%.", source: "Google" },
-  { author: "Mehdi R.", rating: 5, text: "Très bon travail sur la barbe, précis et à l'écoute. Le salon est propre et moderne.", source: "Google" },
-  { author: "Julien P.", rating: 4, text: "Bonne coupe, prix corrects. Un peu d'attente le samedi mais ça vaut le coup.", source: "Google" },
-  { author: "Anthony M.", rating: 5, text: "Mon fils adore y aller, ils sont patients avec les enfants. Coupe impeccable.", source: "Google" },
-  { author: "Sofiane D.", rating: 5, text: "Vrai savoir-faire, dégradé afro parfaitement maîtrisé. Je ne vais plus ailleurs.", source: "Google" },
-  { author: "Nicolas V.", rating: 5, text: "Toujours de bons conseils, très bon relationnel et un rendu premium.", source: "Google" },
-  { author: "Elodie F.", rating: 5, text: "Fait aussi les femmes, mon balayage est superbe. Équipe adorable.", source: "Google" },
+  { author: "Alexis D.", rating: 5, text: "Un grand merci à Cécile et Valente pour leur accueil, leur gentillesse et leur professionnalisme. Mon fils et moi-même sommes ravis de notre coupe de cheveux.", source: "Avis vérifié" },
+  { author: "Maxime B.", rating: 5, text: "Cela fait 2 fois que je vais chez ce coiffeur et je suis toujours très content du résultat, le coiffeur est très à l'écoute. Le salon est très propre.", source: "Avis vérifié" },
+  { author: "Madeleine Y.", rating: 5, text: "Très bons coiffeurs, Valente et Cécile toujours à l'écoute des clients. D'une extrême gentillesse, je conseille.", source: "Avis vérifié" },
+  { author: "Andrea Q.", rating: 5, text: "Un grand merci à Cécile, qui a su m'écouter et me conseiller au mieux pour la réalisation de ma couleur qui est super belle.", source: "Avis vérifié" },
 ];
 
 async function main() {

@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --shop-navy: #12233b;
-  --shop-emerald: #1f6b54;
-  --shop-gold: #c9a25a;
+  --shop-navy: #2a1c11;
+  --shop-emerald: #b15c34;
+  --shop-gold: #c79a4e;
 }
 
 @layer base {
@@ -29,7 +29,7 @@
     width: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(18, 35, 59, 0.25);
+    background: rgba(42, 28, 17, 0.28);
     border-radius: 999px;
   }
 }

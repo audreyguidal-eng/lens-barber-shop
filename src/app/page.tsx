@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/sections/Header";
 import { Hero } from "@/components/sections/Hero";
+import { TrustBar } from "@/components/sections/TrustBar";
 import { Services, type CategoryDTO } from "@/components/sections/Services";
+import { WhyUs } from "@/components/sections/WhyUs";
 import { Gallery } from "@/components/sections/Gallery";
 import { Salon } from "@/components/sections/Salon";
 import { Reviews, type ReviewDTO } from "@/components/sections/Reviews";
@@ -57,7 +59,9 @@ export default async function HomePage() {
       <Header />
       <main>
         <Hero />
+        <TrustBar />
         <Services categories={categories} />
+        <WhyUs />
         <Salon />
         <Gallery images={images} />
         <Reviews reviews={reviews} />

@@ -1,62 +1,63 @@
 /**
  * MANIFESTE D'IMAGES — Len's Barber Shop
  * ------------------------------------------------------------------
- * Toutes les images du site sont centralisées ici pour être remplacées
- * TRÈS FACILEMENT par les vraies photos du salon.
+ * Par défaut : de VRAIES photos de barbier (Unsplash, libres de droit,
+ * URLs vérifiées) — elles s'affichent sur le site en ligne.
  *
- * Par défaut, le site utilise des visuels premium "maison" (dégradés
- * sur-mesure aux couleurs de la marque, dans /public/images/) : ainsi
- * le site s'affiche parfaitement dès le premier déploiement, sans
- * dépendre d'un service externe.
+ * POUR METTRE LES VRAIES PHOTOS DU SALON plus tard :
+ *   - déposez vos fichiers dans public/images/ et remplacez l'URL par
+ *     un chemin local, ex : "/images/mon-salon.jpg"
+ *   - ou collez une autre URL (les domaines Unsplash sont autorisés
+ *     dans next.config.js).
  *
- * POUR METTRE VOS VRAIES PHOTOS :
- *   1) Déposez vos fichiers dans `public/images/`
- *      (ex : public/images/hero.jpg, public/images/g01.jpg, …)
- *      en gardant les mêmes noms → rien d'autre à faire.
- *   2) OU remplacez la valeur ci-dessous par une URL
- *      (ex : une photo Unsplash/Pexels). Les domaines Unsplash sont
- *      déjà autorisés dans next.config.js — ajoutez-en si besoin.
- *
- * Astuce : des exemples d'URL Unsplash sont proposés en commentaire.
+ * (En preview hors-ligne, NEXT_PUBLIC_USE_LOCAL_IMG=1 bascule sur des
+ *  visuels locaux de secours — utilisé uniquement pour les captures.)
  */
 
-const local = (name: string) => `/images/${name}`;
+const LOCAL = process.env.NEXT_PUBLIC_USE_LOCAL_IMG === "1";
+
+// Photo Unsplash -> URL optimisée
+const u = (id: string, w = 1600) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+const up = (id: string, w = 1600) =>
+  `https://plus.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+// couple (url réelle, fallback local)
+const pick = (real: string, local: string) => (LOCAL ? local : real);
 
 export const IMAGES = {
-  // hero: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=2000&q=80",
-  hero: local("hero.jpg"),
-  heroPortrait: local("hero-portrait.jpg"),
+  hero: pick(u("photo-1585747860715-2ba37e788b70", 2000), "/images/hero.jpg"),
+  heroPortrait: pick(u("photo-1599351431202-1e0f0137899a", 1200), "/images/hero-portrait.jpg"),
 
-  salonPrimary: local("salon-primary.jpg"),
-  salonSecondary: local("salon-secondary.jpg"),
+  salonPrimary: pick(u("photo-1536520002442-39764a41e987", 1400), "/images/salon-primary.jpg"),
+  salonSecondary: pick(u("photo-1621645582931-d1d3e6564943", 1000), "/images/salon-secondary.jpg"),
 
-  // Galerie (style Pinterest / masonry) — remplaçable une à une
+  // Galerie — vraies photos de barbier vérifiées
   gallery: [
-    { src: local("g01.jpg"), alt: "Dégradé net réalisé au rasoir", tall: false },
-    { src: local("g02.jpg"), alt: "Barbe sculptée et contours précis", tall: true },
-    { src: local("g03.jpg"), alt: "Ambiance chaleureuse du salon", tall: false },
-    { src: local("g04.jpg"), alt: "Fauteuil de barbier", tall: true },
-    { src: local("g05.jpg"), alt: "Finitions soignées", tall: false },
-    { src: local("g06.jpg"), alt: "Coupe homme moderne", tall: true },
-    { src: local("g07.jpg"), alt: "Rasage traditionnel serviette chaude", tall: false },
-    { src: local("g08.jpg"), alt: "Les outils du barbier", tall: false },
-    { src: local("g09.jpg"), alt: "Détail du poste de coiffage", tall: true },
-    { src: local("g10.jpg"), alt: "Soin de la barbe", tall: false },
-    { src: local("g11.jpg"), alt: "Dégradé afro texturé", tall: true },
-    { src: local("g12.jpg"), alt: "Style et allure", tall: false },
-    { src: local("g13.jpg"), alt: "Produits de coiffage premium", tall: false },
-    { src: local("g14.jpg"), alt: "Poste de coiffage et miroir", tall: true },
-  ],
+    { real: u("photo-1503951914875-452162b0f3f1", 1200), local: "/images/g01.jpg", alt: "Client installé au fauteuil du barbier", tall: false },
+    { real: u("photo-1585747860715-2ba37e788b70", 1200), local: "/images/g02.jpg", alt: "Fauteuil de barbier en cuir, mur de briques", tall: true },
+    { real: u("photo-1593702275687-f8b402bf1fb5", 1200), local: "/images/g03.jpg", alt: "Barbier en pleine coupe", tall: false },
+    { real: u("photo-1536520002442-39764a41e987", 1200), local: "/images/g04.jpg", alt: "Intérieur du salon, ambiance soignée", tall: true },
+    { real: u("photo-1647140655214-e4a2d914971f", 1200), local: "/images/g05.jpg", alt: "Coupe aux ciseaux", tall: false },
+    { real: u("photo-1567894340315-735d7c361db0", 1200), local: "/images/g06.jpg", alt: "Dégradé net à la tondeuse", tall: true },
+    { real: u("photo-1630827020718-3433092696e7", 1200), local: "/images/g07.jpg", alt: "Barbe soignée poivre et sel", tall: false },
+    { real: u("photo-1657105052497-f996284ffff8", 1200), local: "/images/g08.jpg", alt: "Contours de barbe à la tondeuse", tall: false },
+    { real: u("photo-1621645582931-d1d3e6564943", 1200), local: "/images/g09.jpg", alt: "Fauteuil de barbier", tall: true },
+    { real: u("photo-1629189784191-9afdcbcb0398", 1200), local: "/images/g10.jpg", alt: "Portrait, barbe travaillée", tall: false },
+    { real: u("photo-1599351431202-1e0f0137899a", 1200), local: "/images/g11.jpg", alt: "Style et allure après coupe", tall: true },
+    { real: up("premium_photo-1661645788141-8196a45fb483", 1200), local: "/images/g12.jpg", alt: "Soin et coiffage professionnel", tall: false },
+    { real: u("photo-1519500528352-2d1460418d41", 1200), local: "/images/g13.jpg", alt: "Enseigne de barbier", tall: false },
+    { real: u("photo-1622286342621-4bd786c2447c", 1200), local: "/images/g14.jpg", alt: "Poste de coiffage", tall: true },
+  ].map((g) => ({ src: LOCAL ? g.local : g.real, alt: g.alt, tall: g.tall })),
 
-  // Photos d'illustration par catégorie de prestation
   categories: {
-    coupe: local("cat-coupe.jpg"),
-    barbe: local("cat-barbe.jpg"),
-    transformation: local("cat-transformation.jpg"),
-    enfants: local("cat-enfants.jpg"),
-    coloration: local("cat-coloration.jpg"),
-    soins: local("cat-soins.jpg"),
-    femmes: local("cat-femmes.jpg"),
+    coupe: pick(u("photo-1647140655214-e4a2d914971f", 900), "/images/cat-coupe.jpg"),
+    barbe: pick(u("photo-1657105052497-f996284ffff8", 900), "/images/cat-barbe.jpg"),
+    transformation: pick(u("photo-1567894340315-735d7c361db0", 900), "/images/cat-transformation.jpg"),
+    enfants: pick(u("photo-1593702275687-f8b402bf1fb5", 900), "/images/cat-enfants.jpg"),
+    coloration: pick(u("photo-1560066984-138dadb4c035", 900), "/images/cat-coloration.jpg"),
+    soins: pick(u("photo-1629189784191-9afdcbcb0398", 900), "/images/cat-soins.jpg"),
+    femmes: pick(u("photo-1560869713-7d0a29430803", 900), "/images/cat-femmes.jpg"),
   } as Record<string, string>,
 };
 
