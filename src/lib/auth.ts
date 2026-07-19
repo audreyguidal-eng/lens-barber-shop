@@ -62,7 +62,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  // Fallback en mode démo pour éviter tout crash si la variable n'est pas
+  // encore définie. À REMPLACER par un vrai secret en production
+  // (Vercel → Settings → Environment Variables → NEXTAUTH_SECRET).
+  secret: process.env.NEXTAUTH_SECRET || "lens-barber-demo-secret-a-remplacer",
 };
 
 /** Interrupteur global : l'auth de l'espace barbier est-elle active ? */
