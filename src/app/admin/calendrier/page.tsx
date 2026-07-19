@@ -10,8 +10,9 @@ type Appt = {
   end: string;
   status: string;
   priceCents: number;
+  notes?: string | null;
   service: { name: string; durationMin: number };
-  client: { name: string; phone: string };
+  client: { name: string; phone: string; email?: string | null };
 };
 
 const DAY_START = 8 * 60; // 08:00
@@ -207,9 +208,16 @@ export default function CalendarPage() {
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center" onClick={() => setSelected(null)}>
           <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#12151C] p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between">
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-display text-xl text-white">{selected.client.name}</h3>
-                <p className="text-sm text-slate-400">{selected.client.phone}</p>
+                <a href={`tel:${selected.client.phone}`} className="block text-sm text-slate-400 transition hover:text-gold">
+                  {selected.client.phone}
+                </a>
+                {selected.client.email && (
+                  <a href={`mailto:${selected.client.email}`} className="block break-all text-sm text-slate-400 transition hover:text-gold">
+                    {selected.client.email}
+                  </a>
+                )}
               </div>
               <button onClick={() => setSelected(null)} className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-white/5">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
@@ -221,6 +229,14 @@ export default function CalendarPage() {
               <Row label="Date" value={formatDateLong(new Date(selected.start))} />
               <Row label="Créneau" value={`${formatTime(new Date(selected.start))} – ${formatTime(new Date(selected.end))}`} />
               <Row label="Prix" value={formatPrice(selected.priceCents)} />
+              {selected.notes && selected.notes.trim() !== "" && (
+                <div className="border-t border-white/10 pt-2">
+                  <div className="text-slate-400">Notes du client</div>
+                  <div className="mt-1 whitespace-pre-wrap font-medium text-white">
+                    {selected.notes}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2">
