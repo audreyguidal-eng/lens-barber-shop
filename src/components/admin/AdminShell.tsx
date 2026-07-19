@@ -155,7 +155,7 @@ export function AdminShell({
                 )}
               </button>
               {showNotifs && (
-                <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-white/10 bg-[#12151C] p-2 shadow-2xl">
+                <div className="fixed left-3 right-3 top-16 z-50 max-h-[75vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#12151C] p-2 shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:w-80">
                   <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Notifications
                   </div>
