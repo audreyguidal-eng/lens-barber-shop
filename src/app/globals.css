@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --shop-navy: #12233b;
+  --shop-emerald: #1f6b54;
+  --shop-gold: #c9a25a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-canvas text-anthracite font-sans antialiased;
+  }
+  ::selection {
+    background: var(--shop-gold);
+    color: #0e0f12;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tightest;
+  }
+  /* Scrollbar discrète */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(18, 35, 59, 0.25);
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-container px-6 md:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-emerald;
+  }
+
+  /* Bouton principal doré */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full
+      bg-navy px-7 py-3.5 text-sm font-semibold text-canvas shadow-lift
+      transition-all duration-300 hover:-translate-y-0.5 hover:shadow-gold
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold;
+  }
+
+  .btn-gold {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full
+      bg-gold px-7 py-3.5 text-sm font-semibold text-ink shadow-gold
+      transition-all duration-300 hover:-translate-y-0.5 hover:brightness-105
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-anthracite/15
+      bg-white/50 px-7 py-3.5 text-sm font-semibold text-anthracite backdrop-blur
+      transition-all duration-300 hover:border-navy/40 hover:bg-white;
+  }
+
+  .card {
+    @apply rounded-3xl border border-anthracite/10 bg-white shadow-soft;
+  }
+
+  .glass {
+    @apply border border-white/40 bg-white/70 backdrop-blur-xl;
+  }
+
+  .price-tag {
+    @apply font-mono text-base tabular-nums;
+  }
+}
+
+/* Ripple micro-interaction */
+.ripple {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+@keyframes ripple {
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(18, 35, 59, 0.06);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Réduction des animations si préférence système */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

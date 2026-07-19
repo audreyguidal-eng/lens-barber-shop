@@ -1,0 +1,178 @@
+// Len's Barber Shop — schéma Prisma
+// Dev : SQLite. Prod : basculer provider sur "postgresql" + DATABASE_URL Postgres.
+// SQLite ne supporte pas les enums Prisma : les statuts/rôles sont des String documentés.
+
+generator client {
+  provider      = "prisma-client-js"
+  // "native" pour le dev local, "rhel-openssl-3.0.x" pour l'exécution sur Vercel.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  // PRODUCTION (Vercel) : PostgreSQL.
+  // Pour un dev 100% local sans Postgres, remplacez "postgresql" par "sqlite"
+  // et mettez DATABASE_URL="file:./dev.db" dans .env
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Barbier / administrateur. Le barbier est le seul admin.
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String // hash bcrypt
+  role      String   @default("BARBER") // BARBER | ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[] // rendez-vous assignés à ce barbier
+}
+
+/// Catégorie de prestation (Coupe, Barbe, Transformation, Enfants, Coloration, Soins, Femmes...)
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  icon      String    @default("scissors")
+  order     Int       @default(0)
+  services  Service[]
+  createdAt DateTime  @default(now())
+}
+
+/// Prestation réservable
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String   @default("")
+  priceCents  Int // prix en centimes (ex : 2200 = 22,00 €)
+  durationMin Int // durée en minutes
+  image       String   @default("")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  popular     Boolean  @default(false)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  appointments Appointment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Client — créé automatiquement à chaque réservation (dédupliqué par téléphone/email)
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String   @unique
+  email     String?
+  notes     String   @default("") // notes internes du barbier
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+}
+
+/// Rendez-vous
+model Appointment {
+  id        String   @id @default(cuid())
+  start     DateTime // début du créneau
+  end       DateTime // fin (start + durée prestation)
+  status    String   @default("CONFIRMED") // PENDING | CONFIRMED | DONE | CANCELLED
+  priceCents Int     @default(0) // figé au moment de la réservation
+  notes     String   @default("")
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  barberId String?
+  barber   User?   @relation(fields: [barberId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([start])
+  @@index([status])
+}
+
+/// Horaires d'ouverture par jour (0 = dimanche ... 6 = samedi)
+model OpeningHours {
+  id           String  @id @default(cuid())
+  weekday      Int     @unique // 0..6
+  isOpen       Boolean @default(true)
+  openMinutes  Int     @default(540) // minutes depuis minuit (540 = 9h00)
+  closeMinutes Int     @default(1140) // 1140 = 19h00
+  breakStart   Int? // pause déjeuner (optionnelle)
+  breakEnd     Int?
+}
+
+/// Créneau bloqué manuellement par le barbier (pause exceptionnelle)
+model BlockedSlot {
+  id        String   @id @default(cuid())
+  start     DateTime
+  end       DateTime
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([start])
+}
+
+/// Congés / journée fermée
+model Vacation {
+  id        String   @id @default(cuid())
+  startDate DateTime
+  endDate   DateTime
+  reason    String   @default("Congés")
+  createdAt DateTime @default(now())
+}
+
+/// Notifications du dashboard barbier
+model Notification {
+  id        String   @id @default(cuid())
+  type      String // NEW_BOOKING | CANCELLED | MODIFIED
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([read])
+}
+
+/// Réglages généraux du salon (clé/valeur JSON)
+model Settings {
+  id          Int    @id @default(1)
+  shopName    String @default("Len's Barber Shop")
+  phone       String @default("09 80 67 44 20")
+  address     String @default("141 Route de Melun, 91250 Saintry-sur-Seine")
+  slotStepMin Int    @default(15) // granularité des créneaux
+  bufferMin   Int    @default(0) // marge entre deux RDV
+  facebook    String @default("")
+  instagram   String @default("")
+  updatedAt   DateTime @updatedAt @default(now())
+}
+
+/// Galerie administrable
+model Gallery {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String   @default("")
+  order     Int      @default(0)
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+/// Avis clients
+model Review {
+  id        String   @id @default(cuid())
+  author    String
+  rating    Int      @default(5)
+  text      String
+  source    String   @default("Google")
+  date      DateTime @default(now())
+  order     Int      @default(0)
+}
