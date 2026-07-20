@@ -41,3 +41,20 @@ export async function GET() {
 
   return NextResponse.json({ clients: enriched });
 }
+
+// DELETE /api/admin/clients?id=xxx -> supprime définitivement une fiche client
+// (et tous ses rendez-vous associés). Sert au ménage et à la gestion des clients.
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "id requis." }, { status: 400 });
+  }
+  try {
+    await prisma.appointment.deleteMany({ where: { clientId: id } });
+    await prisma.client.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Suppression impossible." }, { status: 500 });
+  }
+}

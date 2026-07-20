@@ -31,6 +31,13 @@ export default function ClientsPage() {
       c.phone.includes(q),
   );
 
+  async function removeClient(c: Client) {
+    if (!confirm(`Supprimer définitivement la fiche de ${c.name} ? Cette action est irréversible.`)) return;
+    await fetch(`/api/admin/clients?id=${c.id}`, { method: "DELETE" });
+    setClients((cs) => cs.filter((x) => x.id !== c.id));
+    setOpen(null);
+  }
+
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-5">
@@ -114,6 +121,13 @@ export default function ClientsPage() {
                 <p className="py-4 text-center text-xs text-slate-500">Aucun rendez-vous.</p>
               )}
             </div>
+
+            <button
+              onClick={() => removeClient(open)}
+              className="mt-5 w-full rounded-xl border border-red-400/30 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-400/10"
+            >
+              Supprimer ce client
+            </button>
           </div>
         </div>
       )}
